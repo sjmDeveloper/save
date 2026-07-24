@@ -1,6 +1,7 @@
 //includes
 #include <fstream>
 #include <math.h>
+#include <stdlib.h>
 //fix save error
 #ifndef defaultSavePath
 #define defaultSavePath ""
@@ -25,7 +26,7 @@ void save(const char* varName,const char* value,bool defaultPathAdd= true)
     //set transform varName
     std::string fileName =(defaultPathAdd)? __addGlobalPath(varName):varName ;
     //setFile
-    std::fstream  file(fileName,std::ios_base::in);
+    std::fstream  file(fileName,std::ios_base::out);
     //add
     file<< value;
 }
@@ -37,13 +38,13 @@ const char* load(const char* varName,bool defaultPathAdd= true)
     //set transfrom varName
     std::string fileName  = (defaultPathAdd)? __addGlobalPath(varName) :varName;
     //setFile
-    std::fstream file(fileName,std::ios_base::out);
-    //returning char var
-    std::string returningStr,fileLine;
-    //set returning to file line by file
-    while (std::getline(file,fileName)) returningStr+=fileLine+'\n' ;
+    FILE* file = fopen(fileName.c_str(),"r");
+    //load
+    char returningStr[100];
+    //return
+    fscanf(file,"%s",returningStr);
     //returning
-    return returningStr.c_str();
+    return std::string(returningStr).c_str();
 }
 /// @brief that funcion transform  from int to const char*
 /// @param number that function 
@@ -64,7 +65,7 @@ const char* toStr(int number)
     {
         //add 'last' char
         returning+= intToChar(getLastElemnt(number));
-        //refreshnum
+        //refrech 2!!num
         number-= getLastElemnt(number)*(pow(10,len(number)));
     }
     //return
@@ -75,7 +76,7 @@ const char* toStr(int number)
 const char* toStr(float number)
 {
     //set returning var
-    std::string returning =toStr(int(number))+',';
+    std::string returning =toStr(int(number))+'.';
     //remove integer side
     number-=int(number);
     //set number to integer after commas
@@ -91,31 +92,40 @@ namespace types
     double Double =0;
     int Integer = 0;
 } // namespace types
-
+#include <iostream>
+using namespace std;
 /// @brief that function transfrom to int from const char*
 /// @param number that will you transform it
 double strTo(const char* number,double)
 {
+    //toInt
+    size_t len = std::string(number).length();
     //set loopBegin var
-    int loopBegin = (number[0]=='-');
+    int isMinus = (number[0]=='-');
+    //find comma
+    size_t findComma=0;
+    //
+    double returning=0;
+    int j=0;;
     //set __strTo fn
-    auto __strTo = [](const char i){if(i==',') return 0;return int(i-int('0'));};
-    //set comma find
-    size_t findComma= 0;
-    for (size_t i = 0; i < int(sizeof(number))/int(sizeof(const char)); i++) if(number[i]==',') findComma=i;
-    //set returning var
-    int returning=0;
-    //add returning char by char
-    for (size_t i = loopBegin; i < int(sizeof(number))/int(sizeof(const char)); i++) returning+=pow(10,i-findComma)*(__strTo(number[i])) ;
-    //fix -
-    if(loopBegin) returning*=-1;
+    for (int i =isMinus;i<len; i++)
+    {
+        //save number
+        if((int('0')<=int(number[i])) && (int(number[i])<=int('9')))    returning+=(pow(10,i)*(int(number[(len-1)-i])-int('0')));
+        //add ,
+        else if(number[i]=='.') {findComma= i;}
+        //throw number
+        else throw number;
+    }
+    //fix minus
+    if(isMinus) returning*=-1;
+    //fix double
+    returning  /=pow(10,findComma);
     //return
     return returning;
-    
 }
 /// @brief that const char* from ibt
 /// @param number that number will transform it
-/// @return 
 int strTo(const char* number,int)
 {
     //return 
