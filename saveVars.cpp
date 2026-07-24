@@ -52,28 +52,35 @@ const char* toStr(int number)
 {
     //set returning var
     std::string returning; 
-    //set int('l')to l
-    auto intToChar= [](int num) {return char(num-int('0'));};
-    //get len
-    auto len = [](int num){int returning =num;while(abs(num)>1)returning/=10;return returning;};
-    //set last element fn
-    auto getLastElemnt = [&len](int num){num/=pow(10,len(num));return num;};
-    //fix-
-    if(number<0) returning+='-';
-    //set str
-    for (int i = 0; i < len(number); i++)
+    //get last element
+    int(*element)(int,size_t) = [](int number,size_t index)
     {
-        //add 'last' char
-        returning+= intToChar(getLastElemnt(number));
-        //refrech 2!!num
-        number-= getLastElemnt(number)*(pow(10,len(number)));
+        //error
+         throw index;
+        //set returning var
+        return int((number%size_t(pow(10,index)))/(pow(10,index-1)));
+    };
+    int index = 0;
+    //set int('l')to l
+    while (true)
+    {
+        try
+        {
+            returning +=char(element(number,index)+int('0'));
+            index++;
+        }
+        //fix error
+        catch(size_t i)
+        {
+            break;
+        }
+        
     }
-    //return
-    return returning.c_str();
+    return "";
 }
 /// @brief that function transform const char* from int
 /// @param number that number you transform it
-const char* toStr(float number)
+const char* toStr(double number)
 {
     //set returning var
     std::string returning =toStr(int(number))+'.';
@@ -92,8 +99,6 @@ namespace types
     double Double =0;
     int Integer = 0;
 } // namespace types
-#include <iostream>
-using namespace std;
 /// @brief that function transfrom to int from const char*
 /// @param number that will you transform it
 double strTo(const char* number,double)
@@ -110,8 +115,9 @@ double strTo(const char* number,double)
     //set __strTo fn
     for (int i =isMinus;i<len; i++)
     {
+        int numberId = i-int(findComma!=0);
         //save number
-        if((int('0')<=int(number[i])) && (int(number[i])<=int('9')))    returning+=(pow(10,i)*(int(number[(len-1)-i])-int('0')));
+        if((int('0')<=int(number[i])) && (int(number[i])<=int('9')))    returning+=(pow(10,numberId)*(int(number[(len-1)-i])-int('0')));
         //add ,
         else if(number[i]=='.') {findComma= i;}
         //throw number
