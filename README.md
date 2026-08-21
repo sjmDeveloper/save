@@ -1,4 +1,4 @@
-:cause
+//cause
 I created this library for save game 
 :how to use it
 save(var)
