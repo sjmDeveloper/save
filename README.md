@@ -6,4 +6,7 @@
 <h2>load(var)</h2>
 <h6>that function load elements of var and return it like type </h2>
 <h1>How it Work</h1>
+<h2>save</h2>
 <h6> that save a vars like create new files write it elements</h2>
+<h2>load</h2>
+<h6>that return whate write in files</h6>
