@@ -10,3 +10,5 @@
 <h6> that save a vars like create new files write it elements</h2>
 <h2>load</h2>
 <h6>that return whate write in files</h6>
+<h1>How to load It</h1>
+<h3>just copy this file and include it</h3>
